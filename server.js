@@ -1,18 +1,16 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const userRoutes = require("./routes/api/user-routes");
-const thoughtRoutes = require("./routes/api/thought-routes");
+const routes = require("./routes");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// routes
-app.use("/api/users", userRoutes);
-app.use("/api/thoughts", thoughtRoutes);
-
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// routes
+app.use(routes);
 
 // connect to mongoose database
 mongoose.connect(
