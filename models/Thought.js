@@ -3,7 +3,6 @@ const moment = require("moment");
 
 const ReactionSchema = new Schema(
   {
-    // set custom id to avoid confusion with parent comment's _id field
     reactionId: {
       type: Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
@@ -20,7 +19,6 @@ const ReactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      // use moment to format date on query
       get: (createdAtVal) =>
         moment(createdAtVal).format("MMM DD, YYYY [at] hh:mm a"),
     },
@@ -43,7 +41,6 @@ const ThoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      // use moment to format date on query
       get: (createdAtVal) =>
         moment(createdAtVal).format("MMM DD, YYYY [at] hh:mm a"),
     },
@@ -54,9 +51,8 @@ const ThoughtSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true, // make this field required
+      required: true,
     },
-    // use ReactionSchema to validate data for a reaction
     reactions: [ReactionSchema],
   },
   {
