@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Thought } = require("../models");
 
 const userController = {
   // get all users
@@ -7,6 +7,10 @@ const userController = {
       .populate({
         path: "thoughts",
         select: "-__v",
+      })
+      .populate({
+        path: "friends",
+        select: "-__v -thoughts",
       })
       .select("-__v")
       .sort({ _id: -1 })
@@ -62,29 +66,23 @@ const userController = {
       .catch((err) => res.status(400).json(err));
   },
 
-  // delete user
+  // delete user and the users thoughts
   deleteUser({ params }, res) {
     User.findOneAndDelete({ _id: params.id })
-      .then((dbUserData) => res.json(dbUserData))
+      .then((user) => {
+        if (!user) {
+          return res.status(404).json({ message: "User not found!" });
+        }
+        // delete all thoughts associated with this user
+        return Thought.deleteMany({ userId: params.id });
+      })
+      .then(() => {
+        res.json({
+          message: "User and all of their thoughts have been deleted!",
+        });
+      })
       .catch((err) => res.status(400).json(err));
   },
-
-  // add friend
-  // addFriend({ params }, res) {
-  //   User.findOneAndUpdate(
-  //     { _id: params.userId },
-  //     { $push: { friends: params.friendId } },
-  //     { new: true }
-  //   )
-  //     .then((dbUserData) => {
-  //       if (!dbUserData) {
-  //         res.status(404).json({ message: "User not found!" });
-  //         return;
-  //       }
-  //       res.json(dbUserData);
-  //     })
-  //     .catch((err) => res.status(400).json(err));
-  // },
 
   // add friend
   addFriend({ params }, res) {

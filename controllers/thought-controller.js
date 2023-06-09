@@ -26,7 +26,6 @@ const thoughtController = {
       })
       .select("-__v")
       .then((dbThoughtData) => {
-        // If no thought is found, send 404
         if (!dbThoughtData) {
           res.status(404).json({ message: "Thought not found!" });
           return;
@@ -129,21 +128,22 @@ const thoughtController = {
     Thought.findOneAndDelete({ _id: params.thoughtId })
       .then((deletedThought) => {
         if (!deletedThought) {
-          return res.status(404).json({ message: "No thought found with this id!" });
+          return res
+            .status(404)
+            .json({ message: "No thought found with this id!" });
         }
         User.findOneAndUpdate(
           { _id: params.userId },
           { $pull: { thoughts: params.thoughtId } },
           { new: true }
-        )
-        .catch((err) => console.log(err)); // log the error if there's one
-        return res.status(200).json({ message: "Thought successfully deleted!" });
+        ).catch((err) => console.log(err)); // log the error if there's one
+        return res
+          .status(200)
+          .json({ message: "Thought successfully deleted!" });
       })
       .catch((err) => res.status(500).json(err));
   },
-  
 
-  
   // add reaction
   addReaction({ params, body }, res) {
     Thought.findOneAndUpdate(

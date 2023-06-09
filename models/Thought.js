@@ -49,7 +49,12 @@ const ThoughtSchema = new Schema(
     },
     username: {
       type: String,
-      required: true,
+      required: false,
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true, // make this field required
     },
     // use ReactionSchema to validate data for a reaction
     reactions: [ReactionSchema],
