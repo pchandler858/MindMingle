@@ -1,4 +1,4 @@
-# Social Media API
+# Mind Mingle - Social Media API
 
 ## Description
 
